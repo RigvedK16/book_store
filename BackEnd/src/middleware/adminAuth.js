@@ -22,7 +22,7 @@ const userAuth = async (req, resp, next) => {
       throw new Error("No tokens Error");
     }
     //validate the token
-    const decodedMessage = await jwt.verify(token, "Arpitttt");
+    const decodedMessage = await jwt.verify(token, process.env.JWT_SECRET);
     console.log(decodedMessage);
     const { _id } = decodedMessage;
     // console.log(_id);

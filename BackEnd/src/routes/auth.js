@@ -34,6 +34,7 @@ authRouter.post("/signup", async (req, res) => {
       password: passwordHash,
       gender,
       age,
+      role: "user",
       photoUrl,
       about,
       location,
@@ -58,8 +59,6 @@ authRouter.post("/signup", async (req, res) => {
 
 authRouter.post("/login", async (req, res) => {
   try {
-    console.log("Rigved1");
-
     const { emailId, password } = req.body;
 
     if (!emailId || !password) {
@@ -85,12 +84,15 @@ authRouter.post("/login", async (req, res) => {
       });
     }
 
-    const token = jwt.sign({ _id: user._id }, "Arpitttt");
+    console.log("LOGIN SECRET:", process.env.JWT_SECRET);
+    const token = jwt.sign({ _id: user._id, role: user.role }, process.env.JWT_SECRET);
 
     // set cookie
     res.cookie("token", token, {
       httpOnly: true,
       sameSite: "lax",
+      path: "/", // ✅ CRITICAL: Make cookie available on ALL routes
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     // remove password before sending user
@@ -113,8 +115,6 @@ authRouter.post("/login", async (req, res) => {
 authRouter.get("/profile", userAuth, async (req, resp) => {
   try {
     const userbyid = req.user;
-    console.log("Rigved");
-
     // console.log(userbyid);
     resp.send(userbyid);
   } catch (err) {

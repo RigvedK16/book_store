@@ -1,9 +1,14 @@
-const URI = "mongodb+srv://rigved_db_user:Rigved%4016@cluster0.x7wo8ke.mongodb.net/DevHacks";
-
 const mongoose = require("mongoose");
+
 const connectDB = async () => {
-  await mongoose.connect(URI);
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("MongoDB connected");
+  } catch (error) {
+    console.error("DB connection failed:", error.message);
+    process.exit(1);
+  }
 };
+
 module.exports = connectDB;
 
-// JEUai6JpLj0xsxG3 // mainarpithoon_db_user module.exports = connectDB;

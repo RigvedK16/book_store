@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const connectDB = require("./config/databse");
@@ -29,19 +30,16 @@ app.get("/", (req, res) => {
 });
 
 const authRouter = require("./routes/auth");
-const groupsRouter = require("./routes/groups");
-const runRouter = require("./routes/run");
-const problemsRouter = require("./routes/problems");
-const contestsRouter = require("./routes/contests");
-const submitRouter = require("./routes/submit");
-
+const bookRouter = require("./routes/bookRouter");
+const uploadRouter = require("./routes/uploadRouter");
+const bookingRouter = require("./routes/bookingRouter");
+const reviewRouter = require("./routes/reviewRouter");
 
 app.use("/", authRouter);
-app.use("/code", runRouter);
-app.use("/code", submitRouter);
-app.use("/groups", groupsRouter);
-app.use("/problems", problemsRouter);
-app.use("/contests", contestsRouter);
+app.use("/", bookRouter);
+app.use("/", uploadRouter);
+app.use("/", bookingRouter);
+app.use("/", reviewRouter);
 // connect DB then start server
 connectDB()
   .then(() => {
