@@ -10,8 +10,22 @@ import RequireAuth from "./components/RequireAuth.jsx";
 import ProtectedAdmin from "./components/ProtectedAdmin.jsx";
 import Cart from "./pages/Cart.jsx";
 import BookDetail from "./pages/BookDetail.jsx";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { clearUser } from "./redux/authSlice";
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const user = localStorage.getItem("bookstore_user");
+    const token = localStorage.getItem("token");
+    // User thinks they're logged in but token is missing — force re-login
+    if (user && !token) {
+      localStorage.removeItem("bookstore_user");
+      dispatch(clearUser());
+    }
+  }, []);
   return (
     <BrowserRouter>
       <Navbar />

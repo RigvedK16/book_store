@@ -38,6 +38,10 @@ export default function Cart() {
     const handleCheckout = async () => {
         if (items.length === 0) return;
 
+        // ADD THIS to debug
+        console.log("Cart items:", JSON.stringify(items, null, 2));
+        console.log("Token in storage:", localStorage.getItem("token"));
+
         setCheckingOut(true);
         setMessage({ type: "", text: "" });
 

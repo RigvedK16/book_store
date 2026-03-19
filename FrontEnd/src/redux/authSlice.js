@@ -98,6 +98,7 @@ const authSlice = createSlice({
       state.loading = false;
       state.error = null;
       saveUserToStorage(null); // ✅ Clear from localStorage
+      localStorage.removeItem("token");
     },
     setError: (state, action) => {
       state.error = action.payload;

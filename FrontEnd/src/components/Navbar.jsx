@@ -22,10 +22,14 @@ export default function Navbar() {
   const handleLogout = async () => {
     try {
       await fetch("/logout", { method: "POST", credentials: "include" });
+      localStorage.removeItem("token"); // ← ADD THIS
       dispatch(clearUser());
       navigate("/");
     } catch (err) {
       console.error("Logout failed:", err);
+      localStorage.removeItem("token"); // ← ADD THIS (even on error)
+      dispatch(clearUser());
+      navigate("/");
     }
   };
 

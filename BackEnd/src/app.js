@@ -135,9 +135,9 @@ const bookingRouter = require("./routes/bookingRouter");
 const reviewRouter = require("./routes/reviewRouter");
 
 app.use("/", authRouter);
-app.use("/", bookRouter);
 app.use("/", uploadRouter);
-app.use("/", bookingRouter);
+app.use("/", bookingRouter);  // ← bookingRouter BEFORE bookRouter
+app.use("/", bookRouter);
 app.use("/", reviewRouter);
 
 connectDB()

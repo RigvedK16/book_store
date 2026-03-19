@@ -33,6 +33,17 @@ export default function Login() {
         body: { emailId, password },
       });
 
+      // ← ADD THESE TWO LINES
+      console.log("Full login response:", JSON.stringify(response));
+      console.log("Token from response:", response.token);
+
+      if (response.token) {
+        localStorage.setItem("token", response.token);
+        console.log("Token saved:", localStorage.getItem("token")); // verify it saved
+      } else {
+        console.error("NO TOKEN IN RESPONSE - backend not returning token!");
+      }
+
       dispatch(setUser(response.user));
       const redirectTo = location.state?.from?.pathname || "/home";
       navigate(redirectTo, { replace: true });
