@@ -1,44 +1,67 @@
-// const adminAuth = (req, resp, next) => {
-//   console.log("Check authh");
-//   const token = "xyz";
-//   const isauthorised = token === "xyz";
-//   if (!isauthorised) {
-//     req.send("ERROR");
-//   } else {
-//     console.log("Passing to next");
+// const jwt = require("jsonwebtoken");
+
+// const User = require("../models/user");
+
+// const userAuth = async (req, resp, next) => {
+//   try {
+//     const cookies = req.cookies;
+//     console.log(cookies);
+//     const { token } = cookies;
+//     if (!token) {
+//       throw new Error("No tokens Error");
+//     }
+//     //validate the token
+//     const decodedMessage = await jwt.verify(token, process.env.JWT_SECRET);
+//     console.log(decodedMessage);
+//     const { _id } = decodedMessage;
+//     // console.log(_id);
+//     const userbyid = await User.findById(_id);
+//     if (!userbyid) {
+//       throw new Error("No user");
+//     }
+//     req.user = userbyid;
+//     // console.log(userbyid);
 //     next();
+//     // resp.send(userbyid);
+//   } catch (err) {
+//     resp.status(400).send("ERROR: " + err.message);
 //   }
 // };
-const jwt = require("jsonwebtoken");
+// module.exports = {
+//   // adminAuth,
+//   userAuth,
+// };
 
+const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
-const userAuth = async (req, resp, next) => {
+const userAuth = async (req, res, next) => {
   try {
-    const cookies = req.cookies;
-    console.log(cookies);
-    const { token } = cookies;
-    if (!token) {
-      throw new Error("No tokens Error");
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader) {
+      throw new Error("No token");
     }
-    //validate the token
-    const decodedMessage = await jwt.verify(token, process.env.JWT_SECRET);
-    console.log(decodedMessage);
-    const { _id } = decodedMessage;
-    // console.log(_id);
-    const userbyid = await User.findById(_id);
-    if (!userbyid) {
-      throw new Error("No user");
+
+    const token = authHeader.split(" ")[1];
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await User.findById(decoded._id);
+    if (!user) {
+      throw new Error("User not found");
     }
-    req.user = userbyid;
-    // console.log(userbyid);
+
+    req.user = user;
     next();
-    // resp.send(userbyid);
   } catch (err) {
-    resp.status(400).send("ERROR: " + err.message);
+    res.status(401).json({
+      success: false,
+      message: err.message,
+    });
   }
 };
+
 module.exports = {
-  // adminAuth,
   userAuth,
 };
